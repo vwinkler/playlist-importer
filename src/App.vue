@@ -1,11 +1,19 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue'
+import SpotifyAuthStatus from './components/SpotifyAuthStatus.vue'
+import type { SpotifyAuthState } from './SpotifyAuthState'
+
+const authState = ref<SpotifyAuthState>({
+  isAuthenticated: false,
+  accessToken: undefined,
+  expiresAt: undefined
+})
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <h1>Playlist Importer</h1>
+  <p>Import playlists from text format into Spotify (Work in Progress)</p>
+  <SpotifyAuthStatus :authState="authState" />
 </template>
 
 <style scoped></style>
