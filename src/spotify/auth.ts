@@ -15,3 +15,18 @@ export function redirectForAuthorization(codeChallenge: string): void {
   url.search = params.toString()
   window.location.replace(url.toString())
 }
+
+export type AuthorizationResponse = {
+  code: string
+}
+
+export function extractAuthorizationResponse(): AuthorizationResponse | null {
+  const urlParams = new URLSearchParams(window.location.search)
+  const code = urlParams.get('code')
+  
+  if (!code) {
+    return null
+  }
+  
+  return { code }
+}

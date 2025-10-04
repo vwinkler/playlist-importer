@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { redirectForAuthorization } from './auth'
+import { redirectForAuthorization, extractAuthorizationResponse } from './auth'
 
 vi.mock('../config', () => ({
   config: {
@@ -7,7 +7,8 @@ vi.mock('../config', () => ({
   },
 }))
 
-describe('redirectForAuthorization', () => {
+describe('auth', () => {
+  describe('redirectForAuthorization', () => {
   beforeEach(() => {
     vi.stubGlobal('location', {
       replace: vi.fn(),
@@ -30,5 +31,18 @@ describe('redirectForAuthorization', () => {
     ].join('')
 
     expect(window.location.replace).toHaveBeenCalledWith(expectedUrl)
+  })
+  })
+
+  describe('extractAuthorizationResponse', () => {
+    it('should extract authorization response from URL search params', () => {
+      vi.stubGlobal('location', {
+        search: '?code=AQBh7-6F8xKjQw'
+      })
+
+      const response = extractAuthorizationResponse()
+
+      expect(response?.code).toBe('AQBh7-6F8xKjQw')
+    })
   })
 })
