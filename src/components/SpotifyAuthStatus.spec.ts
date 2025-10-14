@@ -66,4 +66,25 @@ describe('SpotifyAuthStatus', () => {
       expect.stringContaining('https://accounts.spotify.com/authorize')
     )
   })
+
+  it('shows authentication in progress when code parameter is present', () => {
+    // Mock URL with code parameter
+    vi.stubGlobal('location', {
+      search: '?code=test-auth-code',
+      replace: vi.fn(),
+    })
+
+    const authState: SpotifyAuthState = {
+      isAuthenticated: false,
+      accessToken: undefined,
+      expiresAt: undefined
+    }
+
+    render(SpotifyAuthStatus, {
+      props: { authState }
+    })
+
+    expect(screen.getByText('Authentication in progress...')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /login with spotify/i })).not.toBeInTheDocument()
+  })
 })
