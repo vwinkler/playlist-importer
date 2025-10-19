@@ -8,16 +8,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import type { SpotifyAuthState } from '../SpotifyAuthState'
-import { redirectForAuthorization, extractAuthorizationResponse } from '../spotify/auth'
+import { redirectForAuthorization, extractAuthorizationResponse, exchangeCodeForToken } from '../spotify/auth'
 
 defineProps<{
   authState: SpotifyAuthState
 }>()
 
+const emit = defineEmits<{
+  'auth-state-changed': [authState: SpotifyAuthState]
+}>()
+
 const isAuthenticating = computed(() => {
   return extractAuthorizationResponse() !== null
+})
+
+onMounted(async () => {
+  const authResponse = extractAuthorizationResponse()
+  if (authResponse) {
+    // TODO: Generate and store proper code verifier instead of placeholder
+    const codeVerifier = 'placeholder-code-verifier'
+    const newAuthState = await exchangeCodeForToken(authResponse, codeVerifier)
+    emit('auth-state-changed', newAuthState)
+  }
 })
 
 function handleLogin() {

@@ -1,21 +1,35 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, cleanup } from '@testing-library/vue'
+import { describe, it, expect, vi, beforeEach, afterEach, afterAll } from 'vitest'
+import { render, screen, cleanup, waitFor } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/vitest'
 import { addHours } from 'date-fns'
+import { server } from '../spotify/request_handlers.testutils'
 import SpotifyAuthStatus from './SpotifyAuthStatus.vue'
 import type { SpotifyAuthState } from '../SpotifyAuthState'
+
+vi.mock('../config', () => ({
+  config: {
+    spotifyClientId: 'test-client-id',
+    spotifyRedirectUri: 'http://example.com/callback',
+  },
+}))
 
 describe('SpotifyAuthStatus', () => {
   let user: ReturnType<typeof userEvent.setup>
 
   beforeEach(() => {
     user = userEvent.setup()
+    server.listen()
   })
 
   afterEach(() => {
     // TODO: Investigate why manual cleanup is needed - DOM should be cleaned automatically between tests
     cleanup()
+    server.resetHandlers()
+  })
+
+  afterAll(() => {
+    server.close()
   })
   it('shows not authenticated when isAuthenticated is false', () => {
     const authState: SpotifyAuthState = {
@@ -86,5 +100,31 @@ describe('SpotifyAuthStatus', () => {
 
     expect(screen.getByText('Authentication in progress...')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /login with spotify/i })).not.toBeInTheDocument()
+  })
+
+  it('emits updated auth state when code parameter is present', async () => {
+    vi.stubGlobal('location', {
+      search: '?code=test-auth-code',
+      replace: vi.fn(),
+    })
+
+    const authState: SpotifyAuthState = {
+      isAuthenticated: false,
+      accessToken: undefined,
+      expiresAt: undefined
+    }
+
+    const { emitted } = render(SpotifyAuthStatus, {
+      props: { authState }
+    })
+
+    await waitFor(() => {
+      const authStateChangedEvent = emitted()['auth-state-changed']
+      expect(authStateChangedEvent[0]).toEqual([{
+        isAuthenticated: true,
+        accessToken: 'mocked-access-token',
+        expiresAt: expect.any(Date)
+      }])
+    })
   })
 })
