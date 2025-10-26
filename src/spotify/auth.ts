@@ -47,7 +47,7 @@ function buildTokenExchangeRequest(
   codeVerifier: string
 ): { url: string; options: RequestInit } {
   return {
-    url: 'https://accounts.spotify.com/api/token',
+    url: `${config.spotifyApiBaseUrl}/token`,
     options: {
       method: 'POST',
       headers: {

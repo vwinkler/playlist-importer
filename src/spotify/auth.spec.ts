@@ -7,6 +7,7 @@ vi.mock('../config', () => ({
   config: {
     spotifyClientId: 'test-client-id',
     spotifyRedirectUri: 'http://example.com/callback',
+    spotifyApiBaseUrl: 'https://accounts.spotify.com/api',
   },
 }))
 
