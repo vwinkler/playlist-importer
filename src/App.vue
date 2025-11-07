@@ -8,12 +8,16 @@ const authState = ref<SpotifyAuthState>({
   accessToken: undefined,
   expiresAt: undefined
 })
+
+function handleAuthStateChanged(newAuthState: SpotifyAuthState) {
+  authState.value = newAuthState
+}
 </script>
 
 <template>
   <h1>Playlist Importer</h1>
   <p>Import playlists from text format into Spotify (Work in Progress)</p>
-  <SpotifyAuthStatus :authState="authState" />
+  <SpotifyAuthStatus :authState="authState" @auth-state-changed="handleAuthStateChanged" />
 </template>
 
 <style scoped></style>

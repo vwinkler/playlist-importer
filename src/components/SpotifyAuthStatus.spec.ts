@@ -128,4 +128,24 @@ describe('SpotifyAuthStatus', () => {
       }])
     })
   })
+
+  it('shows authenticated when code parameter is present but isAuthenticated is true', () => {
+    vi.stubGlobal('location', {
+      search: '?code=test-auth-code',
+      replace: vi.fn(),
+    })
+
+    const authState: SpotifyAuthState = {
+      isAuthenticated: true,
+      accessToken: 'test-token',
+      expiresAt: addHours(new Date(), 1)
+    }
+
+    render(SpotifyAuthStatus, {
+      props: { authState }
+    })
+
+    expect(screen.getByText('Authenticated')).toBeInTheDocument()
+    expect(screen.queryByText('Authentication in progress...')).not.toBeInTheDocument()
+  })
 })

@@ -12,7 +12,7 @@ import { computed, onMounted } from 'vue'
 import type { SpotifyAuthState } from '../SpotifyAuthState'
 import { redirectForAuthorization, extractAuthorizationResponse, exchangeCodeForToken } from '../spotify/auth'
 
-defineProps<{
+const props = defineProps<{
   authState: SpotifyAuthState
 }>()
 
@@ -21,7 +21,7 @@ const emit = defineEmits<{
 }>()
 
 const isAuthenticating = computed(() => {
-  return extractAuthorizationResponse() !== null
+  return extractAuthorizationResponse() !== null && !props.authState.isAuthenticated
 })
 
 onMounted(async () => {
