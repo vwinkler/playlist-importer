@@ -14,7 +14,11 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "check": "run-s format:check lint:check type-check test:unit:run",
+    "format:check": "prettier --check src/",
+    "lint:check": "eslint .",
+    "test:unit:run": "vitest run"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
