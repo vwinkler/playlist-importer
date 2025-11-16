@@ -36,11 +36,11 @@ describe('SpotifyAuthStatus', () => {
     const authState: SpotifyAuthState = {
       isAuthenticated: false,
       accessToken: undefined,
-      expiresAt: undefined
+      expiresAt: undefined,
     }
 
     render(SpotifyAuthStatus, {
-      props: { authState }
+      props: { authState },
     })
 
     expect(screen.getByText('Not authenticated')).toBeInTheDocument()
@@ -50,11 +50,11 @@ describe('SpotifyAuthStatus', () => {
     const authState: SpotifyAuthState = {
       isAuthenticated: true,
       accessToken: 'test-token',
-      expiresAt: addHours(new Date(), 1)
+      expiresAt: addHours(new Date(), 1),
     }
 
     render(SpotifyAuthStatus, {
-      props: { authState }
+      props: { authState },
     })
 
     expect(screen.getByText('Authenticated')).toBeInTheDocument()
@@ -68,17 +68,17 @@ describe('SpotifyAuthStatus', () => {
     const authState: SpotifyAuthState = {
       isAuthenticated: false,
       accessToken: undefined,
-      expiresAt: undefined
+      expiresAt: undefined,
     }
 
     render(SpotifyAuthStatus, {
-      props: { authState }
+      props: { authState },
     })
 
     await user.click(screen.getByRole('button', { name: /login with spotify/i }))
 
     expect(window.location.replace).toHaveBeenCalledWith(
-      expect.stringContaining('https://accounts.spotify.com/authorize')
+      expect.stringContaining('https://accounts.spotify.com/authorize'),
     )
   })
 
@@ -92,11 +92,11 @@ describe('SpotifyAuthStatus', () => {
     const authState: SpotifyAuthState = {
       isAuthenticated: false,
       accessToken: undefined,
-      expiresAt: undefined
+      expiresAt: undefined,
     }
 
     render(SpotifyAuthStatus, {
-      props: { authState }
+      props: { authState },
     })
 
     expect(screen.getByText('Authentication in progress...')).toBeInTheDocument()
@@ -112,20 +112,22 @@ describe('SpotifyAuthStatus', () => {
     const authState: SpotifyAuthState = {
       isAuthenticated: false,
       accessToken: undefined,
-      expiresAt: undefined
+      expiresAt: undefined,
     }
 
     const { emitted } = render(SpotifyAuthStatus, {
-      props: { authState }
+      props: { authState },
     })
 
     await waitFor(() => {
       const authStateChangedEvent = emitted()['auth-state-changed']
-      expect(authStateChangedEvent[0]).toEqual([{
-        isAuthenticated: true,
-        accessToken: 'mocked-access-token',
-        expiresAt: expect.any(Date)
-      }])
+      expect(authStateChangedEvent[0]).toEqual([
+        {
+          isAuthenticated: true,
+          accessToken: 'mocked-access-token',
+          expiresAt: expect.any(Date),
+        },
+      ])
     })
   })
 
@@ -138,11 +140,11 @@ describe('SpotifyAuthStatus', () => {
     const authState: SpotifyAuthState = {
       isAuthenticated: true,
       accessToken: 'test-token',
-      expiresAt: addHours(new Date(), 1)
+      expiresAt: addHours(new Date(), 1),
     }
 
     render(SpotifyAuthStatus, {
-      props: { authState }
+      props: { authState },
     })
 
     expect(screen.getByText('Authenticated')).toBeInTheDocument()

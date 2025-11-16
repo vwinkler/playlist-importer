@@ -5,12 +5,7 @@ import {
   extractAuthorizationResponse,
   exchangeCodeForToken,
 } from './auth'
-import {
-  server,
-  MOCK_TOKEN_RESPONSE,
-  MOCK_CLIENT_ID,
-  MOCK_REDIRECT_URI,
-} from './request_handlers.testutils'
+import { server, MOCK_TOKEN_RESPONSE } from './request_handlers.testutils'
 
 vi.mock('../config', () => ({
   config: {

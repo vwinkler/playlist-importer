@@ -1,4 +1,4 @@
-export type SpotifyAuthState = 
+export type SpotifyAuthState =
   | {
       isAuthenticated: false
       accessToken: undefined

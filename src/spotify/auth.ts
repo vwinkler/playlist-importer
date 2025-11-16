@@ -81,8 +81,13 @@ function ensureHttpResponseOk(response: Response): void {
   }
 }
 
-function ensureTokenDataValid(tokenData: any): void {
-  if (!tokenData.access_token || !tokenData.expires_in) {
+function ensureTokenDataValid(tokenData: unknown): void {
+  if (
+    typeof tokenData !== 'object' ||
+    tokenData === null ||
+    !('access_token' in tokenData) ||
+    !('expires_in' in tokenData)
+  ) {
     throw new Error('Invalid token response: missing required fields')
   }
 }
