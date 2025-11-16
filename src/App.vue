@@ -6,7 +6,7 @@ import type { SpotifyAuthState } from './SpotifyAuthState'
 const authState = ref<SpotifyAuthState>({
   isAuthenticated: false,
   accessToken: undefined,
-  expiresAt: undefined
+  expiresAt: undefined,
 })
 
 function handleAuthStateChanged(newAuthState: SpotifyAuthState) {

@@ -24,27 +24,27 @@ export type AuthorizationResponse = {
 export function extractAuthorizationResponse(): AuthorizationResponse | null {
   const urlParams = new URLSearchParams(window.location.search)
   const code = urlParams.get('code')
-  
+
   if (!code) {
     return null
   }
-  
+
   return { code }
 }
 
 export async function exchangeCodeForToken(
   authResponse: AuthorizationResponse,
-  codeVerifier: string
+  codeVerifier: string,
 ): Promise<SpotifyAuthState> {
   const request = buildTokenExchangeRequest(authResponse, codeVerifier)
   const tokenData = await requestToken(request)
-  
+
   return createAuthState(tokenData)
 }
 
 function buildTokenExchangeRequest(
   authResponse: AuthorizationResponse,
-  codeVerifier: string
+  codeVerifier: string,
 ): { url: string; options: RequestInit } {
   return {
     url: `${config.spotifyApiBaseUrl}/token`,
@@ -60,11 +60,14 @@ function buildTokenExchangeRequest(
         client_id: config.spotifyClientId,
         code_verifier: codeVerifier,
       }).toString(),
-    }
+    },
   }
 }
 
-async function requestToken(request: { url: string; options: RequestInit }): Promise<{ access_token: string; expires_in: number }> {
+async function requestToken(request: {
+  url: string
+  options: RequestInit
+}): Promise<{ access_token: string; expires_in: number }> {
   const response = await fetch(request.url, request.options)
   ensureHttpResponseOk(response)
   const tokenData = await response.json()
@@ -84,10 +87,13 @@ function ensureTokenDataValid(tokenData: any): void {
   }
 }
 
-function createAuthState(tokenData: { access_token: string; expires_in: number }): SpotifyAuthState {
+function createAuthState(tokenData: {
+  access_token: string
+  expires_in: number
+}): SpotifyAuthState {
   return {
     isAuthenticated: true,
     accessToken: tokenData.access_token,
-    expiresAt: new Date(Date.now() + tokenData.expires_in * 1000)
+    expiresAt: new Date(Date.now() + tokenData.expires_in * 1000),
   }
 }
