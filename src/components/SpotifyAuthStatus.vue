@@ -17,6 +17,7 @@ import {
   extractAuthorizationResponse,
   exchangeCodeForToken,
 } from '../spotify/auth'
+import { generateRandomString } from '../util/authentication'
 
 const props = defineProps<{
   authState: SpotifyAuthState
@@ -27,20 +28,29 @@ const emit = defineEmits<{
 }>()
 
 const isAuthenticating = computed(() => {
-  return extractAuthorizationResponse() !== null && !props.authState.isAuthenticated
+  return (
+    extractAuthorizationResponse() !== null &&
+    !props.authState.isAuthenticated &&
+    sessionStorage.getItem('code_verifier') !== null
+  )
 })
 
 onMounted(async () => {
-  const authResponse = extractAuthorizationResponse()
-  if (authResponse) {
-    // TODO: Generate and store proper code verifier instead of placeholder
-    const codeVerifier = 'placeholder-code-verifier'
-    const newAuthState = await exchangeCodeForToken(authResponse, codeVerifier)
-    emit('auth-state-changed', newAuthState)
+  if (!isAuthenticating.value) {
+    return
   }
+
+  const authResponse = extractAuthorizationResponse()!
+  const codeVerifier = sessionStorage.getItem('code_verifier')!
+
+  const newAuthState = await exchangeCodeForToken(authResponse, codeVerifier)
+  sessionStorage.removeItem('code_verifier')
+  emit('auth-state-changed', newAuthState)
 })
 
 function handleLogin() {
+  const codeVerifier = generateRandomString(64)
+  sessionStorage.setItem('code_verifier', codeVerifier)
   // TODO: Generate proper code challenge instead of placeholder
   redirectForAuthorization('placeholder-code-challenge')
 }

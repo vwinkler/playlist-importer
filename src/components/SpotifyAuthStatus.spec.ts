@@ -3,6 +3,7 @@ import { render, screen, cleanup, waitFor } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/vitest'
 import { addHours } from 'date-fns'
+import { http, HttpResponse } from 'msw'
 import { server } from '../spotify/request_handlers.testutils'
 import SpotifyAuthStatus from './SpotifyAuthStatus.vue'
 import type { SpotifyAuthState } from '../SpotifyAuthState'
@@ -27,6 +28,7 @@ describe('SpotifyAuthStatus', () => {
     // TODO: Investigate why manual cleanup is needed - DOM should be cleaned automatically between tests
     cleanup()
     server.resetHandlers()
+    sessionStorage.clear()
   })
 
   afterAll(() => {
@@ -80,14 +82,16 @@ describe('SpotifyAuthStatus', () => {
     expect(window.location.replace).toHaveBeenCalledWith(
       expect.stringContaining('https://accounts.spotify.com/authorize'),
     )
+    expect(sessionStorage.getItem('code_verifier')).toBeTruthy()
   })
 
   it('shows authentication in progress when code parameter is present', () => {
-    // Mock URL with code parameter
     vi.stubGlobal('location', {
       search: '?code=test-auth-code',
       replace: vi.fn(),
     })
+
+    sessionStorage.setItem('code_verifier', 'test-verifier')
 
     const authState: SpotifyAuthState = {
       isAuthenticated: false,
@@ -109,6 +113,24 @@ describe('SpotifyAuthStatus', () => {
       replace: vi.fn(),
     })
 
+    const testVerifier = 'test-verifier-12345'
+    sessionStorage.setItem('code_verifier', testVerifier)
+
+    let capturedVerifier: string | null = null
+    server.use(
+      http.post('https://accounts.spotify.com/api/token', async ({ request }) => {
+        const body = await request.text()
+        const params = new URLSearchParams(body)
+        capturedVerifier = params.get('code_verifier')
+        return HttpResponse.json({
+          access_token: 'mocked-access-token',
+          token_type: 'Bearer',
+          expires_in: 3600,
+          scope: 'playlist-modify-public playlist-modify-private',
+        })
+      }),
+    )
+
     const authState: SpotifyAuthState = {
       isAuthenticated: false,
       accessToken: undefined,
@@ -129,6 +151,8 @@ describe('SpotifyAuthStatus', () => {
         },
       ])
     })
+
+    expect(capturedVerifier).toBe(testVerifier)
   })
 
   it('shows authenticated when code parameter is present but isAuthenticated is true', () => {
@@ -148,6 +172,26 @@ describe('SpotifyAuthStatus', () => {
     })
 
     expect(screen.getByText('Authenticated')).toBeInTheDocument()
+    expect(screen.queryByText('Authentication in progress...')).not.toBeInTheDocument()
+  })
+
+  it('shows not authenticated when code parameter is present but code_verifier is missing', () => {
+    vi.stubGlobal('location', {
+      search: '?code=test-auth-code',
+      replace: vi.fn(),
+    })
+
+    const authState: SpotifyAuthState = {
+      isAuthenticated: false,
+      accessToken: undefined,
+      expiresAt: undefined,
+    }
+
+    render(SpotifyAuthStatus, {
+      props: { authState },
+    })
+
+    expect(screen.getByText('Not authenticated')).toBeInTheDocument()
     expect(screen.queryByText('Authentication in progress...')).not.toBeInTheDocument()
   })
 })

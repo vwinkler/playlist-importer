@@ -20,6 +20,7 @@ describe('App', () => {
   afterEach(() => {
     cleanup()
     server.resetHandlers()
+    sessionStorage.clear()
   })
 
   afterAll(() => {
@@ -37,10 +38,18 @@ describe('App', () => {
       replace: vi.fn(),
     })
 
+    sessionStorage.setItem('code_verifier', 'test-verifier')
+
     render(App)
 
     await waitFor(() => {
       expect(screen.getByText('Authenticated')).toBeInTheDocument()
     })
   })
+
+  // TODO: Replace this test with a full integration test that does not rely on sessionStorage implementation details:
+  // 1. Click login button to initiate authentication
+  // 2. Mock the redirect from Spotify with authorization code
+  // 3. Wait for token exchange to complete
+  // 4. Verify "Authenticated" label appears
 })
