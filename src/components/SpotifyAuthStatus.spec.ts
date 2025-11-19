@@ -194,4 +194,31 @@ describe('SpotifyAuthStatus', () => {
     expect(screen.getByText('Not authenticated')).toBeInTheDocument()
     expect(screen.queryByText('Authentication in progress...')).not.toBeInTheDocument()
   })
+
+  it('generates valid PKCE code challenge when login button is clicked', async () => {
+    const mockReplace = vi.fn()
+    vi.stubGlobal('location', {
+      replace: mockReplace,
+    })
+
+    const authState: SpotifyAuthState = {
+      isAuthenticated: false,
+      accessToken: undefined,
+      expiresAt: undefined,
+    }
+
+    render(SpotifyAuthStatus, {
+      props: { authState },
+    })
+
+    await user.click(screen.getByRole('button', { name: /login with spotify/i }))
+
+    await waitFor(() => {
+      const authorizationUrl = mockReplace.mock.calls[0][0]
+      const url = new URL(authorizationUrl)
+      const codeChallenge = url.searchParams.get('code_challenge')
+
+      expect(codeChallenge).toHaveLength(43)
+    })
+  })
 })

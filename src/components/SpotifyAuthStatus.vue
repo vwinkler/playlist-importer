@@ -17,7 +17,7 @@ import {
   extractAuthorizationResponse,
   exchangeCodeForToken,
 } from '../spotify/auth'
-import { generateRandomString } from '../util/authentication'
+import { generateRandomString, generateCodeChallenge } from '../util/authentication'
 
 const props = defineProps<{
   authState: SpotifyAuthState
@@ -48,10 +48,10 @@ onMounted(async () => {
   emit('auth-state-changed', newAuthState)
 })
 
-function handleLogin() {
+async function handleLogin() {
   const codeVerifier = generateRandomString(64)
   sessionStorage.setItem('code_verifier', codeVerifier)
-  // TODO: Generate proper code challenge instead of placeholder
-  redirectForAuthorization('placeholder-code-challenge')
+  const codeChallenge = await generateCodeChallenge(codeVerifier)
+  redirectForAuthorization(codeChallenge)
 }
 </script>
