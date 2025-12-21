@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import SpotifyAuthStatus from './components/SpotifyAuthStatus.vue'
+import SpotifySearchResult from './components/SpotifySearchResult.vue'
 import type { SpotifyAuthState } from './SpotifyAuthState'
 
 const authState = ref<SpotifyAuthState>({
@@ -18,6 +19,10 @@ function handleAuthStateChanged(newAuthState: SpotifyAuthState) {
   <h1>Playlist Importer</h1>
   <p>Import playlists from text format into Spotify (Work in Progress)</p>
   <SpotifyAuthStatus :authState="authState" @auth-state-changed="handleAuthStateChanged" />
+  <SpotifySearchResult
+    v-if="authState.isAuthenticated && authState.accessToken"
+    :accessToken="authState.accessToken"
+  />
 </template>
 
 <style scoped></style>
