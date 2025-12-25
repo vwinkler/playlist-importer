@@ -1,4 +1,4 @@
-FROM docker.io/node:25
+FROM docker.io/node:24
 
 RUN npm install -g @anthropic-ai/claude-code
 
