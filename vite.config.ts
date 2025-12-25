@@ -23,6 +23,11 @@ export default defineConfig({
       '/api': {
         target: 'https://accounts.spotify.com',
         changeOrigin: true,
+      },
+      '/spotify-api': {
+        target: 'https://api.spotify.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/spotify-api/, ''),
       }
     }
   }
