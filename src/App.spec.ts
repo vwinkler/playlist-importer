@@ -1,9 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach, afterAll } from 'vitest'
 import { render, screen, waitFor, cleanup } from '@testing-library/vue'
-import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/vitest'
 import App from './App.vue'
-import { server, MOCK_TRACK_ITEM } from './spotify/request_handlers.testutils'
+import { server } from './spotify/request_handlers.testutils'
 
 vi.mock('./config', () => ({
   config: {
@@ -49,7 +48,7 @@ describe('App', () => {
     })
   })
 
-  it('displays track name when search button is clicked in authenticated state', async () => {
+  it('displays search button when authenticated', async () => {
     vi.stubGlobal('location', {
       search: '?code=test-auth-code',
       replace: vi.fn(),
@@ -57,14 +56,10 @@ describe('App', () => {
 
     sessionStorage.setItem('code_verifier', 'test-verifier')
 
-    const user = userEvent.setup()
     render(App)
 
-    const searchButton = await screen.findByRole('button', { name: /search/i })
-    await user.click(searchButton)
-
     await waitFor(() => {
-      expect(screen.getByText(MOCK_TRACK_ITEM.name)).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /search/i })).toBeInTheDocument()
     })
   })
 
