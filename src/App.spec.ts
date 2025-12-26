@@ -1,14 +1,16 @@
 import { describe, it, expect, vi, beforeEach, afterEach, afterAll } from 'vitest'
 import { render, screen, waitFor, cleanup } from '@testing-library/vue'
+import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/vitest'
 import App from './App.vue'
-import { server } from './spotify/request_handlers.testutils'
+import { server, MOCK_TRACK_ITEM } from './spotify/request_handlers.testutils'
 
 vi.mock('./config', () => ({
   config: {
     spotifyClientId: 'test-client-id',
     spotifyRedirectUri: 'http://example.com/callback',
     spotifyApiBaseUrl: 'https://accounts.spotify.com/api',
+    spotifyWebApiBaseUrl: 'https://api.spotify.com',
   },
 }))
 
@@ -44,6 +46,25 @@ describe('App', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Authenticated')).toBeInTheDocument()
+    })
+  })
+
+  it('displays track name when search button is clicked in authenticated state', async () => {
+    vi.stubGlobal('location', {
+      search: '?code=test-auth-code',
+      replace: vi.fn(),
+    })
+
+    sessionStorage.setItem('code_verifier', 'test-verifier')
+
+    const user = userEvent.setup()
+    render(App)
+
+    const searchButton = await screen.findByRole('button', { name: /search/i })
+    await user.click(searchButton)
+
+    await waitFor(() => {
+      expect(screen.getByText(MOCK_TRACK_ITEM.name)).toBeInTheDocument()
     })
   })
 

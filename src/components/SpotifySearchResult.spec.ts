@@ -1,51 +1,15 @@
-import { describe, it, expect, vi, beforeEach, afterEach, afterAll } from 'vitest'
-import { render, screen, cleanup, waitFor } from '@testing-library/vue'
-import userEvent from '@testing-library/user-event'
+import { describe, it, expect } from 'vitest'
+import { render, screen } from '@testing-library/vue'
 import '@testing-library/jest-dom/vitest'
-import { server } from '../spotify/request_handlers.testutils'
+import { MOCK_TRACK_ITEM } from '../spotify/request_handlers.testutils'
 import SpotifySearchResult from './SpotifySearchResult.vue'
 
-vi.mock('../config', () => ({
-  config: {
-    spotifyClientId: 'test-client-id',
-    spotifyRedirectUri: 'http://example.com/callback',
-    spotifyApiBaseUrl: 'https://accounts.spotify.com/api',
-    spotifyWebApiBaseUrl: 'https://api.spotify.com',
-  },
-}))
-
 describe('SpotifySearchResult', () => {
-  let user: ReturnType<typeof userEvent.setup>
-
-  beforeEach(() => {
-    user = userEvent.setup()
-    server.listen()
-  })
-
-  afterEach(() => {
-    cleanup()
-    server.resetHandlers()
-  })
-
-  afterAll(() => {
-    server.close()
-  })
-
-  it('shows search result when button is clicked with authenticated state', async () => {
-    const accessToken = 'test-access-token'
-
+  it('displays track name when provided', () => {
     render(SpotifySearchResult, {
-      props: { accessToken },
+      props: { trackName: MOCK_TRACK_ITEM.name },
     })
 
-    await user.click(screen.getByRole('button', { name: /search/i }))
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(
-          'Symphony No. 11 in G Minor, Op. 103, "The Year 1905": II. The 9th of January. Allegro - Adagio - Allegro - Adagio',
-        ),
-      ).toBeInTheDocument()
-    })
+    expect(screen.getByText(MOCK_TRACK_ITEM.name)).toBeInTheDocument()
   })
 })
