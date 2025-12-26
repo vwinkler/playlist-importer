@@ -11,6 +11,126 @@ export const MOCK_TOKEN_RESPONSE = {
   scope: 'playlist-modify-public playlist-modify-private',
 }
 
+export const MOCK_TRACK_ITEM = {
+  album: {
+    album_type: 'album',
+    total_tracks: 4,
+    available_markets: ['US', 'CA', 'GB'],
+    external_urls: {
+      spotify: 'https://open.spotify.com/album/3p5zVsLOeGmOM9E4LUn0bV',
+    },
+    href: 'https://api.spotify.com/v1/albums/3p5zVsLOeGmOM9E4LUn0bV',
+    id: '3p5zVsLOeGmOM9E4LUn0bV',
+    images: [
+      {
+        url: 'https://i.scdn.co/image/ab67616d0000b273c92a2a994a815cdf20e38fee',
+        height: 640,
+        width: 640,
+      },
+      {
+        url: 'https://i.scdn.co/image/ab67616d00001e02c92a2a994a815cdf20e38fee',
+        height: 300,
+        width: 300,
+      },
+      {
+        url: 'https://i.scdn.co/image/ab67616d00004851c92a2a994a815cdf20e38fee',
+        height: 64,
+        width: 64,
+      },
+    ],
+    name: 'Shostakovich: Symphony No. 11',
+    release_date: '2019-06-07',
+    release_date_precision: 'day',
+    type: 'album',
+    uri: 'spotify:album:3p5zVsLOeGmOM9E4LUn0bV',
+    artists: [
+      {
+        external_urls: {
+          spotify: 'https://open.spotify.com/artist/6s1pCNXcbdtQJlsnM1hRIA',
+        },
+        href: 'https://api.spotify.com/v1/artists/6s1pCNXcbdtQJlsnM1hRIA',
+        id: '6s1pCNXcbdtQJlsnM1hRIA',
+        name: 'Dmitri Shostakovich',
+        type: 'artist',
+        uri: 'spotify:artist:6s1pCNXcbdtQJlsnM1hRIA',
+      },
+      {
+        external_urls: {
+          spotify: 'https://open.spotify.com/artist/1kLhJK7xiowRJJwf28NKhZ',
+        },
+        href: 'https://api.spotify.com/v1/artists/1kLhJK7xiowRJJwf28NKhZ',
+        id: '1kLhJK7xiowRJJwf28NKhZ',
+        name: 'Michael Sanderling',
+        type: 'artist',
+        uri: 'spotify:artist:1kLhJK7xiowRJJwf28NKhZ',
+      },
+      {
+        external_urls: {
+          spotify: 'https://open.spotify.com/artist/03C9IJtseK0NX9zw53URjF',
+        },
+        href: 'https://api.spotify.com/v1/artists/03C9IJtseK0NX9zw53URjF',
+        id: '03C9IJtseK0NX9zw53URjF',
+        name: 'Dresdner Philharmonie',
+        type: 'artist',
+        uri: 'spotify:artist:03C9IJtseK0NX9zw53URjF',
+      },
+    ],
+    is_playable: true,
+  },
+  artists: [
+    {
+      external_urls: {
+        spotify: 'https://open.spotify.com/artist/6s1pCNXcbdtQJlsnM1hRIA',
+      },
+      href: 'https://api.spotify.com/v1/artists/6s1pCNXcbdtQJlsnM1hRIA',
+      id: '6s1pCNXcbdtQJlsnM1hRIA',
+      name: 'Dmitri Shostakovich',
+      type: 'artist',
+      uri: 'spotify:artist:6s1pCNXcbdtQJlsnM1hRIA',
+    },
+    {
+      external_urls: {
+        spotify: 'https://open.spotify.com/artist/1kLhJK7xiowRJJwf28NKhZ',
+      },
+      href: 'https://api.spotify.com/v1/artists/1kLhJK7xiowRJJwf28NKhZ',
+      id: '1kLhJK7xiowRJJwf28NKhZ',
+      name: 'Michael Sanderling',
+      type: 'artist',
+      uri: 'spotify:artist:1kLhJK7xiowRJJwf28NKhZ',
+    },
+    {
+      external_urls: {
+        spotify: 'https://open.spotify.com/artist/03C9IJtseK0NX9zw53URjF',
+      },
+      href: 'https://api.spotify.com/v1/artists/03C9IJtseK0NX9zw53URjF',
+      id: '03C9IJtseK0NX9zw53URjF',
+      name: 'Dresdner Philharmonie',
+      type: 'artist',
+      uri: 'spotify:artist:03C9IJtseK0NX9zw53URjF',
+    },
+  ],
+  available_markets: ['US', 'CA', 'GB'],
+  disc_number: 1,
+  duration_ms: 1153186,
+  explicit: false,
+  external_ids: {
+    isrc: 'DEE861901044',
+  },
+  external_urls: {
+    spotify: 'https://open.spotify.com/track/4PWhgmUYtPebUnDRP8o9rw',
+  },
+  href: 'https://api.spotify.com/v1/tracks/4PWhgmUYtPebUnDRP8o9rw',
+  id: '4PWhgmUYtPebUnDRP8o9rw',
+  is_playable: true,
+  name: 'Symphony No. 11 in G Minor, Op. 103, "The Year 1905": II. The 9th of January. Allegro - Adagio - Allegro - Adagio',
+  popularity: 25,
+  preview_url: null,
+  track_number: 2,
+  type: 'track',
+  uri: 'spotify:track:4PWhgmUYtPebUnDRP8o9rw',
+  is_local: false,
+}
+
 export const MOCK_SEARCH_RESPONSE = {
   tracks: {
     href: 'https://api.spotify.com/v1/search?offset=0&limit=1&query=Symphony%20No.%2011&type=track&locale=en-US,en;q%3D0.5',
@@ -19,127 +139,7 @@ export const MOCK_SEARCH_RESPONSE = {
     offset: 0,
     previous: null,
     total: 1000,
-    items: [
-      {
-        album: {
-          album_type: 'album',
-          total_tracks: 4,
-          available_markets: ['US', 'CA', 'GB'],
-          external_urls: {
-            spotify: 'https://open.spotify.com/album/3p5zVsLOeGmOM9E4LUn0bV',
-          },
-          href: 'https://api.spotify.com/v1/albums/3p5zVsLOeGmOM9E4LUn0bV',
-          id: '3p5zVsLOeGmOM9E4LUn0bV',
-          images: [
-            {
-              url: 'https://i.scdn.co/image/ab67616d0000b273c92a2a994a815cdf20e38fee',
-              height: 640,
-              width: 640,
-            },
-            {
-              url: 'https://i.scdn.co/image/ab67616d00001e02c92a2a994a815cdf20e38fee',
-              height: 300,
-              width: 300,
-            },
-            {
-              url: 'https://i.scdn.co/image/ab67616d00004851c92a2a994a815cdf20e38fee',
-              height: 64,
-              width: 64,
-            },
-          ],
-          name: 'Shostakovich: Symphony No. 11',
-          release_date: '2019-06-07',
-          release_date_precision: 'day',
-          type: 'album',
-          uri: 'spotify:album:3p5zVsLOeGmOM9E4LUn0bV',
-          artists: [
-            {
-              external_urls: {
-                spotify: 'https://open.spotify.com/artist/6s1pCNXcbdtQJlsnM1hRIA',
-              },
-              href: 'https://api.spotify.com/v1/artists/6s1pCNXcbdtQJlsnM1hRIA',
-              id: '6s1pCNXcbdtQJlsnM1hRIA',
-              name: 'Dmitri Shostakovich',
-              type: 'artist',
-              uri: 'spotify:artist:6s1pCNXcbdtQJlsnM1hRIA',
-            },
-            {
-              external_urls: {
-                spotify: 'https://open.spotify.com/artist/1kLhJK7xiowRJJwf28NKhZ',
-              },
-              href: 'https://api.spotify.com/v1/artists/1kLhJK7xiowRJJwf28NKhZ',
-              id: '1kLhJK7xiowRJJwf28NKhZ',
-              name: 'Michael Sanderling',
-              type: 'artist',
-              uri: 'spotify:artist:1kLhJK7xiowRJJwf28NKhZ',
-            },
-            {
-              external_urls: {
-                spotify: 'https://open.spotify.com/artist/03C9IJtseK0NX9zw53URjF',
-              },
-              href: 'https://api.spotify.com/v1/artists/03C9IJtseK0NX9zw53URjF',
-              id: '03C9IJtseK0NX9zw53URjF',
-              name: 'Dresdner Philharmonie',
-              type: 'artist',
-              uri: 'spotify:artist:03C9IJtseK0NX9zw53URjF',
-            },
-          ],
-          is_playable: true,
-        },
-        artists: [
-          {
-            external_urls: {
-              spotify: 'https://open.spotify.com/artist/6s1pCNXcbdtQJlsnM1hRIA',
-            },
-            href: 'https://api.spotify.com/v1/artists/6s1pCNXcbdtQJlsnM1hRIA',
-            id: '6s1pCNXcbdtQJlsnM1hRIA',
-            name: 'Dmitri Shostakovich',
-            type: 'artist',
-            uri: 'spotify:artist:6s1pCNXcbdtQJlsnM1hRIA',
-          },
-          {
-            external_urls: {
-              spotify: 'https://open.spotify.com/artist/1kLhJK7xiowRJJwf28NKhZ',
-            },
-            href: 'https://api.spotify.com/v1/artists/1kLhJK7xiowRJJwf28NKhZ',
-            id: '1kLhJK7xiowRJJwf28NKhZ',
-            name: 'Michael Sanderling',
-            type: 'artist',
-            uri: 'spotify:artist:1kLhJK7xiowRJJwf28NKhZ',
-          },
-          {
-            external_urls: {
-              spotify: 'https://open.spotify.com/artist/03C9IJtseK0NX9zw53URjF',
-            },
-            href: 'https://api.spotify.com/v1/artists/03C9IJtseK0NX9zw53URjF',
-            id: '03C9IJtseK0NX9zw53URjF',
-            name: 'Dresdner Philharmonie',
-            type: 'artist',
-            uri: 'spotify:artist:03C9IJtseK0NX9zw53URjF',
-          },
-        ],
-        available_markets: ['US', 'CA', 'GB'],
-        disc_number: 1,
-        duration_ms: 1153186,
-        explicit: false,
-        external_ids: {
-          isrc: 'DEE861901044',
-        },
-        external_urls: {
-          spotify: 'https://open.spotify.com/track/4PWhgmUYtPebUnDRP8o9rw',
-        },
-        href: 'https://api.spotify.com/v1/tracks/4PWhgmUYtPebUnDRP8o9rw',
-        id: '4PWhgmUYtPebUnDRP8o9rw',
-        is_playable: true,
-        name: 'Symphony No. 11 in G Minor, Op. 103, "The Year 1905": II. The 9th of January. Allegro - Adagio - Allegro - Adagio',
-        popularity: 25,
-        preview_url: null,
-        track_number: 2,
-        type: 'track',
-        uri: 'spotify:track:4PWhgmUYtPebUnDRP8o9rw',
-        is_local: false,
-      },
-    ],
+    items: [MOCK_TRACK_ITEM],
   },
 }
 
