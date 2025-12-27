@@ -8,16 +8,16 @@ defineProps<{
   accessToken: string
 }>()
 
-const searchResult = ref<SpotifyResultTrack | null>(null)
+const searchResults = ref<SpotifyResultTrack[]>([])
 
-function handleSearchResult(result: SpotifyResultTrack) {
-  searchResult.value = result
+function handleSearchResults(results: SpotifyResultTrack[]) {
+  searchResults.value = results
 }
 </script>
 
 <template>
   <div>
-    <SpotifySearchMask :access-token="accessToken" @result="handleSearchResult" />
-    <SpotifyResultTrackView v-if="searchResult" :result="searchResult" />
+    <SpotifySearchMask :access-token="accessToken" @result="handleSearchResults" />
+    <SpotifyResultTrackView v-if="searchResults.length > 0" :result="searchResults[0]" />
   </div>
 </template>

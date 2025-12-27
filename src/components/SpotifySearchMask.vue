@@ -15,7 +15,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  result: [result: SpotifyResultTrack]
+  result: [results: SpotifyResultTrack[]]
 }>()
 
 const searchQuery = ref('')
@@ -30,6 +30,6 @@ async function search() {
     },
   )
   const data = await response.json()
-  emit('result', { trackName: data.tracks.items[0].name })
+  emit('result', [{ trackName: data.tracks.items[0].name }])
 }
 </script>

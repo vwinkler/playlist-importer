@@ -49,7 +49,7 @@ describe('SpotifySearchMask', () => {
 
     await waitFor(() => {
       expect(emitted()).toHaveProperty('result')
-      expect(emitted().result[0]).toEqual([{ trackName: MOCK_TRACK_ITEM.name }])
+      expect(emitted().result[0]).toEqual([[{ trackName: MOCK_TRACK_ITEM.name }]])
     })
   })
 })
