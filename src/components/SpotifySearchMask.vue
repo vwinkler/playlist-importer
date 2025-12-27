@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input v-model="searchQuery" type="text" />
+    <textarea v-model="searchInput" />
     <button @click="search">Search</button>
   </div>
 </template>
@@ -18,11 +18,15 @@ const emit = defineEmits<{
   result: [results: SpotifyResultTrack[]]
 }>()
 
-const searchQuery = ref('')
+const searchInput = ref('')
 
-async function search() {
+function splitLines(input: string): string[] {
+  return input.split('\n').filter((line) => line.trim() !== '')
+}
+
+async function searchTrack(query: string): Promise<SpotifyResultTrack> {
   const response = await fetch(
-    `${config.spotifyWebApiBaseUrl}/v1/search?q=${searchQuery.value}&type=track&limit=1`,
+    `${config.spotifyWebApiBaseUrl}/v1/search?q=${query}&type=track&limit=1`,
     {
       headers: {
         Authorization: `Bearer ${props.accessToken}`,
@@ -30,6 +34,12 @@ async function search() {
     },
   )
   const data = await response.json()
-  emit('result', [{ trackName: data.tracks.items[0].name }])
+  return { trackName: data.tracks.items[0].name }
+}
+
+async function search() {
+  const lines = splitLines(searchInput.value)
+  const results = await Promise.all(lines.map(searchTrack))
+  emit('result', results)
 }
 </script>

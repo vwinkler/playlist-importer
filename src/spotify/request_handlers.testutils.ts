@@ -4,6 +4,7 @@ import { setupServer } from 'msw/node'
 export const MOCK_CLIENT_ID = 'test-client-id'
 export const MOCK_REDIRECT_URI = 'http://example.com/callback'
 export const MOCK_TRACK_SEARCH_TERM = 'Symphony No. 11'
+export const MOCK_TRACK_2_SEARCH_TERM = 'creep'
 
 export const MOCK_TOKEN_RESPONSE = {
   access_token: 'mocked-access-token',
@@ -132,6 +133,86 @@ export const MOCK_TRACK_ITEM = {
   is_local: false,
 }
 
+export const MOCK_TRACK_ITEM_2 = {
+  album: {
+    album_type: 'album',
+    total_tracks: 12,
+    available_markets: ['US', 'CA', 'GB'],
+    external_urls: {
+      spotify: 'https://open.spotify.com/album/3gBVdu4a1MMJVMy6vwPEb8',
+    },
+    href: 'https://api.spotify.com/v1/albums/3gBVdu4a1MMJVMy6vwPEb8',
+    id: '3gBVdu4a1MMJVMy6vwPEb8',
+    images: [
+      {
+        url: 'https://i.scdn.co/image/ab67616d0000b273ec548c00d3ac2f10be73366d',
+        height: 640,
+        width: 640,
+      },
+      {
+        url: 'https://i.scdn.co/image/ab67616d00001e02ec548c00d3ac2f10be73366d',
+        height: 300,
+        width: 300,
+      },
+      {
+        url: 'https://i.scdn.co/image/ab67616d00004851ec548c00d3ac2f10be73366d',
+        height: 64,
+        width: 64,
+      },
+    ],
+    name: 'Pablo Honey',
+    release_date: '1993-02-22',
+    release_date_precision: 'day',
+    type: 'album',
+    uri: 'spotify:album:3gBVdu4a1MMJVMy6vwPEb8',
+    artists: [
+      {
+        external_urls: {
+          spotify: 'https://open.spotify.com/artist/4Z8W4fKeB5YxbusRsdQVPb',
+        },
+        href: 'https://api.spotify.com/v1/artists/4Z8W4fKeB5YxbusRsdQVPb',
+        id: '4Z8W4fKeB5YxbusRsdQVPb',
+        name: 'Radiohead',
+        type: 'artist',
+        uri: 'spotify:artist:4Z8W4fKeB5YxbusRsdQVPb',
+      },
+    ],
+    is_playable: true,
+  },
+  artists: [
+    {
+      external_urls: {
+        spotify: 'https://open.spotify.com/artist/4Z8W4fKeB5YxbusRsdQVPb',
+      },
+      href: 'https://api.spotify.com/v1/artists/4Z8W4fKeB5YxbusRsdQVPb',
+      id: '4Z8W4fKeB5YxbusRsdQVPb',
+      name: 'Radiohead',
+      type: 'artist',
+      uri: 'spotify:artist:4Z8W4fKeB5YxbusRsdQVPb',
+    },
+  ],
+  available_markets: ['US', 'CA', 'GB'],
+  disc_number: 1,
+  duration_ms: 238640,
+  explicit: true,
+  external_ids: {
+    isrc: 'GBAYE9200070',
+  },
+  external_urls: {
+    spotify: 'https://open.spotify.com/track/70LcF31zb1H0PyJoS1Sx1r',
+  },
+  href: 'https://api.spotify.com/v1/tracks/70LcF31zb1H0PyJoS1Sx1r',
+  id: '70LcF31zb1H0PyJoS1Sx1r',
+  is_playable: true,
+  name: 'Creep',
+  popularity: 92,
+  preview_url: null,
+  track_number: 2,
+  type: 'track',
+  uri: 'spotify:track:70LcF31zb1H0PyJoS1Sx1r',
+  is_local: false,
+}
+
 export const FALLBACK_TRACK_ITEM = {
   album: {
     album_type: 'album',
@@ -224,6 +305,18 @@ export const MOCK_SEARCH_RESPONSE = {
   },
 }
 
+export const MOCK_SEARCH_RESPONSE_2 = {
+  tracks: {
+    href: 'https://api.spotify.com/v1/search?offset=0&limit=1&query=creep&type=track&locale=en-US,en;q%3D0.5',
+    limit: 1,
+    next: 'https://api.spotify.com/v1/search?offset=1&limit=1&query=creep&type=track&locale=en-US,en;q%3D0.5',
+    offset: 0,
+    previous: null,
+    total: 114,
+    items: [MOCK_TRACK_ITEM_2],
+  },
+}
+
 export const FALLBACK_SEARCH_RESPONSE = {
   tracks: {
     href: 'https://api.spotify.com/v1/search?offset=0&limit=1&query=fallback&type=track&locale=en-US,en;q%3D0.5',
@@ -293,6 +386,10 @@ export const handlers = [
 
     if (query === MOCK_TRACK_SEARCH_TERM) {
       return HttpResponse.json(MOCK_SEARCH_RESPONSE)
+    }
+
+    if (query === MOCK_TRACK_2_SEARCH_TERM) {
+      return HttpResponse.json(MOCK_SEARCH_RESPONSE_2)
     }
 
     return HttpResponse.json(FALLBACK_SEARCH_RESPONSE)
