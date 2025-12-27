@@ -3,6 +3,7 @@ import { setupServer } from 'msw/node'
 
 export const MOCK_CLIENT_ID = 'test-client-id'
 export const MOCK_REDIRECT_URI = 'http://example.com/callback'
+export const MOCK_TRACK_SEARCH_TERM = 'Symphony No. 11'
 
 export const MOCK_TOKEN_RESPONSE = {
   access_token: 'mocked-access-token',
@@ -131,6 +132,86 @@ export const MOCK_TRACK_ITEM = {
   is_local: false,
 }
 
+export const FALLBACK_TRACK_ITEM = {
+  album: {
+    album_type: 'album',
+    total_tracks: 12,
+    available_markets: ['US', 'CA', 'GB'],
+    external_urls: {
+      spotify: 'https://open.spotify.com/album/2noRn2Aes5aoNVsU6iWThc',
+    },
+    href: 'https://api.spotify.com/v1/albums/2noRn2Aes5aoNVsU6iWThc',
+    id: '2noRn2Aes5aoNVsU6iWThc',
+    images: [
+      {
+        url: 'https://i.scdn.co/image/ab67616d0000b273e318dbc0e47297ea17c9653a',
+        height: 640,
+        width: 640,
+      },
+      {
+        url: 'https://i.scdn.co/image/ab67616d00001e02e318dbc0e47297ea17c9653a',
+        height: 300,
+        width: 300,
+      },
+      {
+        url: 'https://i.scdn.co/image/ab67616d00004851e318dbc0e47297ea17c9653a',
+        height: 64,
+        width: 64,
+      },
+    ],
+    name: 'Random Access Memories',
+    release_date: '2013-05-17',
+    release_date_precision: 'day',
+    type: 'album',
+    uri: 'spotify:album:2noRn2Aes5aoNVsU6iWThc',
+    artists: [
+      {
+        external_urls: {
+          spotify: 'https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi',
+        },
+        href: 'https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi',
+        id: '4tZwfgrHOc3mvqYlEYSvVi',
+        name: 'Daft Punk',
+        type: 'artist',
+        uri: 'spotify:artist:4tZwfgrHOc3mvqYlEYSvVi',
+      },
+    ],
+    is_playable: true,
+  },
+  artists: [
+    {
+      external_urls: {
+        spotify: 'https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi',
+      },
+      href: 'https://api.spotify.com/v1/artists/4tZwfgrHOc3mvqYlEYSvVi',
+      id: '4tZwfgrHOc3mvqYlEYSvVi',
+      name: 'Daft Punk',
+      type: 'artist',
+      uri: 'spotify:artist:4tZwfgrHOc3mvqYlEYSvVi',
+    },
+  ],
+  available_markets: ['US', 'CA', 'GB'],
+  disc_number: 1,
+  duration_ms: 337560,
+  explicit: false,
+  external_ids: {
+    isrc: 'USQX91300105',
+  },
+  external_urls: {
+    spotify: 'https://open.spotify.com/track/0DiWol3AO6WpXZgp0goxAV',
+  },
+  href: 'https://api.spotify.com/v1/tracks/0DiWol3AO6WpXZgp0goxAV',
+  id: '0DiWol3AO6WpXZgp0goxAV',
+  is_playable: true,
+  name: 'Get Lucky',
+  popularity: 80,
+  preview_url: null,
+  track_number: 8,
+  type: 'track',
+  uri: 'spotify:track:0DiWol3AO6WpXZgp0goxAV',
+  is_local: false,
+}
+
 export const MOCK_SEARCH_RESPONSE = {
   tracks: {
     href: 'https://api.spotify.com/v1/search?offset=0&limit=1&query=Symphony%20No.%2011&type=track&locale=en-US,en;q%3D0.5',
@@ -140,6 +221,18 @@ export const MOCK_SEARCH_RESPONSE = {
     previous: null,
     total: 1000,
     items: [MOCK_TRACK_ITEM],
+  },
+}
+
+export const FALLBACK_SEARCH_RESPONSE = {
+  tracks: {
+    href: 'https://api.spotify.com/v1/search?offset=0&limit=1&query=fallback&type=track&locale=en-US,en;q%3D0.5',
+    limit: 1,
+    next: 'https://api.spotify.com/v1/search?offset=1&limit=1&query=fallback&type=track&locale=en-US,en;q%3D0.5',
+    offset: 0,
+    previous: null,
+    total: 500,
+    items: [FALLBACK_TRACK_ITEM],
   },
 }
 
@@ -198,7 +291,11 @@ export const handlers = [
       )
     }
 
-    return HttpResponse.json(MOCK_SEARCH_RESPONSE)
+    if (query === MOCK_TRACK_SEARCH_TERM) {
+      return HttpResponse.json(MOCK_SEARCH_RESPONSE)
+    }
+
+    return HttpResponse.json(FALLBACK_SEARCH_RESPONSE)
   }),
 ]
 
