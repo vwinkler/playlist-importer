@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import SpotifySearchInput from './SpotifySearchInput.vue'
-import SpotifySearchResult from './SpotifySearchResult.vue'
+import SpotifySearchMask from './SpotifySearchMask.vue'
+import SpotifyResultTrackView from './SpotifyResultTrackView.vue'
+import type { SpotifyResultTrack } from '../model/SpotifyResultTrack'
 
 defineProps<{
   accessToken: string
 }>()
 
-const searchResult = ref<string>('')
+const searchResult = ref<SpotifyResultTrack | null>(null)
 
-function handleSearchResult(trackName: string) {
-  searchResult.value = trackName
+function handleSearchResult(result: SpotifyResultTrack) {
+  searchResult.value = result
 }
 </script>
 
 <template>
   <div>
-    <SpotifySearchInput :access-token="accessToken" @result="handleSearchResult" />
-    <SpotifySearchResult v-if="searchResult" :track-name="searchResult" />
+    <SpotifySearchMask :access-token="accessToken" @result="handleSearchResult" />
+    <SpotifyResultTrackView v-if="searchResult" :result="searchResult" />
   </div>
 </template>

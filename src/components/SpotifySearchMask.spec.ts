@@ -9,7 +9,7 @@ import {
   MOCK_TRACK_ITEM,
   MOCK_TRACK_SEARCH_TERM,
 } from '../spotify/request_handlers.testutils'
-import SpotifySearchInput from './SpotifySearchInput.vue'
+import SpotifySearchMask from './SpotifySearchMask.vue'
 
 vi.mock('../config', () => ({
   config: {
@@ -20,7 +20,7 @@ vi.mock('../config', () => ({
   },
 }))
 
-describe('SpotifySearchInput', () => {
+describe('SpotifySearchMask', () => {
   let user: ReturnType<typeof userEvent.setup>
 
   beforeEach(() => {
@@ -37,10 +37,10 @@ describe('SpotifySearchInput', () => {
     server.close()
   })
 
-  it('emits track name when user enters search query and clicks button', async () => {
+  it('emits SpotifySearchResult when user enters search query and clicks button', async () => {
     const accessToken = 'test-access-token'
 
-    const { emitted } = render(SpotifySearchInput, {
+    const { emitted } = render(SpotifySearchMask, {
       props: { accessToken },
     })
 
@@ -49,7 +49,7 @@ describe('SpotifySearchInput', () => {
 
     await waitFor(() => {
       expect(emitted()).toHaveProperty('result')
-      expect(emitted().result[0]).toEqual([MOCK_TRACK_ITEM.name])
+      expect(emitted().result[0]).toEqual([{ trackName: MOCK_TRACK_ITEM.name }])
     })
   })
 })
