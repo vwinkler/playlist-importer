@@ -5,7 +5,9 @@ import '@testing-library/jest-dom/vitest'
 import {
   server,
   MOCK_TRACK_ITEM,
+  MOCK_TRACK_ITEM_2,
   MOCK_TRACK_SEARCH_TERM,
+  MOCK_TRACK_2_SEARCH_TERM,
 } from '../spotify/request_handlers.testutils'
 import SpotifySearch from './SpotifySearch.vue'
 
@@ -42,11 +44,15 @@ describe('SpotifySearch', () => {
       props: { accessToken },
     })
 
-    await user.type(screen.getByRole('textbox'), MOCK_TRACK_SEARCH_TERM)
+    await user.type(
+      screen.getByRole('textbox'),
+      `${MOCK_TRACK_SEARCH_TERM}{Enter}${MOCK_TRACK_2_SEARCH_TERM}`,
+    )
     await user.click(screen.getByRole('button', { name: /search/i }))
 
     await waitFor(() => {
       expect(screen.getByText(MOCK_TRACK_ITEM.name)).toBeInTheDocument()
+      expect(screen.getByText(MOCK_TRACK_ITEM_2.name)).toBeInTheDocument()
     })
   })
 })

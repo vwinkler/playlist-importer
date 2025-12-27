@@ -18,6 +18,6 @@ function handleSearchResults(results: SpotifyResultTrack[]) {
 <template>
   <div>
     <SpotifySearchMask :access-token="accessToken" @result="handleSearchResults" />
-    <SpotifyResultTrackView v-if="searchResults.length > 0" :result="searchResults[0]" />
+    <SpotifyResultTrackView v-for="(track, index) in searchResults" :key="index" :result="track" />
   </div>
 </template>
