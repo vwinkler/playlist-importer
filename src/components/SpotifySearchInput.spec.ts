@@ -7,6 +7,7 @@ import {
   MOCK_CLIENT_ID,
   MOCK_REDIRECT_URI,
   MOCK_TRACK_ITEM,
+  MOCK_TRACK_SEARCH_TERM,
 } from '../spotify/request_handlers.testutils'
 import SpotifySearchInput from './SpotifySearchInput.vue'
 
@@ -36,13 +37,14 @@ describe('SpotifySearchInput', () => {
     server.close()
   })
 
-  it('emits track name when button is clicked', async () => {
+  it('emits track name when user enters search query and clicks button', async () => {
     const accessToken = 'test-access-token'
 
     const { emitted } = render(SpotifySearchInput, {
       props: { accessToken },
     })
 
+    await user.type(screen.getByRole('textbox'), MOCK_TRACK_SEARCH_TERM)
     await user.click(screen.getByRole('button', { name: /search/i }))
 
     await waitFor(() => {

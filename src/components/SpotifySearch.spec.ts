@@ -2,7 +2,11 @@ import { describe, it, expect, vi, beforeEach, afterEach, afterAll } from 'vites
 import { render, screen, waitFor, cleanup } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/vitest'
-import { server, MOCK_TRACK_ITEM } from '../spotify/request_handlers.testutils'
+import {
+  server,
+  MOCK_TRACK_ITEM,
+  MOCK_TRACK_SEARCH_TERM,
+} from '../spotify/request_handlers.testutils'
 import SpotifySearch from './SpotifySearch.vue'
 
 vi.mock('../config', () => ({
@@ -38,8 +42,8 @@ describe('SpotifySearch', () => {
       props: { accessToken },
     })
 
-    const searchButton = screen.getByRole('button', { name: /search/i })
-    await user.click(searchButton)
+    await user.type(screen.getByRole('textbox'), MOCK_TRACK_SEARCH_TERM)
+    await user.click(screen.getByRole('button', { name: /search/i }))
 
     await waitFor(() => {
       expect(screen.getByText(MOCK_TRACK_ITEM.name)).toBeInTheDocument()
