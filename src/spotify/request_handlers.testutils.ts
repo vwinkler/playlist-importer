@@ -468,11 +468,43 @@ export const handlers = [
       throw new Error('Playlist name is required')
     }
 
-    if (!body.description || typeof body.description !== 'string' || body.description.trim() === '') {
+    if (
+      !body.description ||
+      typeof body.description !== 'string' ||
+      body.description.trim() === ''
+    ) {
       throw new Error('Playlist description is required')
     }
 
     return HttpResponse.json(MOCK_PLAYLIST_RESPONSE)
+  }),
+  http.post('https://api.spotify.com/v1/playlists/:playlistId/tracks', async ({ request }) => {
+    const authHeader = request.headers.get('Authorization')
+    const contentType = request.headers.get('Content-Type')
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return HttpResponse.json({ error: 'unauthorized' }, { status: 401 })
+    }
+
+    if (contentType !== 'application/json') {
+      return HttpResponse.json(
+        { error: 'invalid_request', error_description: 'Invalid content type' },
+        { status: 400 },
+      )
+    }
+
+    const body = await request.json()
+
+    if (!body || typeof body !== 'object' || !('uris' in body) || !Array.isArray(body.uris)) {
+      return HttpResponse.json(
+        { error: 'invalid_request', error_description: 'uris must be an array' },
+        { status: 400 },
+      )
+    }
+
+    return HttpResponse.json({
+      snapshot_id: 'JbtmHBDBAYu3/bt8BOXKjzKx3i0b6LCa/wVjyl6qQ2Yf6nFXkbmzuEa+ZI/U1yF+',
+    })
   }),
 ]
 

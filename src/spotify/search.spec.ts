@@ -31,7 +31,10 @@ describe('search', () => {
 
       const result = await searchTrack(query, accessToken)
 
-      expect(result).toEqual({ trackName: MOCK_TRACK_ITEM.name })
+      expect(result).toEqual({
+        trackName: MOCK_TRACK_ITEM.name,
+        uri: MOCK_TRACK_ITEM.uri,
+      })
     })
   })
 })

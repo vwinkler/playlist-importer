@@ -11,5 +11,9 @@ export async function searchTrack(query: string, accessToken: string): Promise<S
     },
   )
   const data = await response.json()
-  return { trackName: data.tracks.items[0].name }
+  const track = data.tracks.items[0]
+  return {
+    trackName: track.name,
+    uri: track.uri,
+  }
 }

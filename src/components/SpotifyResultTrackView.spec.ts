@@ -7,7 +7,7 @@ import SpotifyResultTrackView from './SpotifyResultTrackView.vue'
 describe('SpotifyResultTrackView', () => {
   it('displays track name when provided', () => {
     render(SpotifyResultTrackView, {
-      props: { result: { trackName: MOCK_TRACK_ITEM.name } },
+      props: { result: { trackName: MOCK_TRACK_ITEM.name, uri: MOCK_TRACK_ITEM.uri } },
     })
 
     expect(screen.getByText(MOCK_TRACK_ITEM.name)).toBeInTheDocument()
