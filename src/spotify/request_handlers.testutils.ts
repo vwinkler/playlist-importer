@@ -3,6 +3,7 @@ import { setupServer } from 'msw/node'
 
 export const MOCK_CLIENT_ID = 'test-client-id'
 export const MOCK_REDIRECT_URI = 'http://example.com/callback'
+export const MOCK_USER_ID = 'someuser'
 export const MOCK_TRACK_SEARCH_TERM = 'Symphony No. 11'
 export const MOCK_TRACK_2_SEARCH_TERM = 'creep'
 
@@ -329,6 +330,46 @@ export const FALLBACK_SEARCH_RESPONSE = {
   },
 }
 
+export const MOCK_PLAYLIST_RESPONSE = {
+  collaborative: false,
+  description: 'New playlist description',
+  external_urls: {
+    spotify: 'https://open.spotify.com/playlist/4jSPaUpF74pSeST1clMiR9',
+  },
+  followers: {
+    href: null,
+    total: 0,
+  },
+  href: 'https://api.spotify.com/v1/playlists/4jSPaUpF74pSeST1clMiR9',
+  id: '4jSPaUpF74pSeST1clMiR9',
+  images: [],
+  primary_color: null,
+  name: 'New Playlist',
+  type: 'playlist',
+  uri: 'spotify:playlist:4jSPaUpF74pSeST1clMiR9',
+  owner: {
+    href: `https://api.spotify.com/v1/users/${MOCK_USER_ID}`,
+    id: MOCK_USER_ID,
+    type: 'user',
+    uri: `spotify:user:${MOCK_USER_ID}`,
+    display_name: null,
+    external_urls: {
+      spotify: `https://open.spotify.com/user/${MOCK_USER_ID}`,
+    },
+  },
+  public: false,
+  snapshot_id: 'AAAA1F+xDhGZ7vOwfaEDJgaTGbBKzwNZ',
+  tracks: {
+    limit: 100,
+    next: null,
+    offset: 0,
+    previous: null,
+    href: 'https://api.spotify.com/v1/playlists/4jSPaUpF74pSeST1clMiR9/tracks',
+    total: 0,
+    items: [],
+  },
+}
+
 export const handlers = [
   http.post('https://accounts.spotify.com/api/token', async ({ request }) => {
     const contentType = request.headers.get('Content-Type')
@@ -393,6 +434,45 @@ export const handlers = [
     }
 
     return HttpResponse.json(FALLBACK_SEARCH_RESPONSE)
+  }),
+  http.post('https://api.spotify.com/v1/users/:userId/playlists', async ({ request, params }) => {
+    const authHeader = request.headers.get('Authorization')
+    const contentType = request.headers.get('Content-Type')
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return HttpResponse.json({ error: 'unauthorized' }, { status: 401 })
+    }
+
+    if (contentType !== 'application/json') {
+      return HttpResponse.json(
+        { error: 'invalid_request', error_description: 'Invalid content type' },
+        { status: 400 },
+      )
+    }
+
+    if (params.userId !== MOCK_USER_ID) {
+      return HttpResponse.json({ error: 'forbidden' }, { status: 403 })
+    }
+
+    const body = await request.json()
+
+    if (!body || typeof body !== 'object') {
+      throw new Error('Invalid request body')
+    }
+
+    if (body.public !== false) {
+      throw new Error('Only private playlists are allowed')
+    }
+
+    if (!body.name || typeof body.name !== 'string' || body.name.trim() === '') {
+      throw new Error('Playlist name is required')
+    }
+
+    if (!body.description || typeof body.description !== 'string' || body.description.trim() === '') {
+      throw new Error('Playlist description is required')
+    }
+
+    return HttpResponse.json(MOCK_PLAYLIST_RESPONSE)
   }),
 ]
 
