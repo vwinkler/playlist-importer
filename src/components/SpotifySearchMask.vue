@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { config } from '../config'
+import { searchTrack } from '../spotify/search'
 import type { SpotifyResultTrack } from '../model/SpotifyResultTrack'
 
 const props = defineProps<{
@@ -24,22 +24,9 @@ function splitLines(input: string): string[] {
   return input.split('\n').filter((line) => line.trim() !== '')
 }
 
-async function searchTrack(query: string): Promise<SpotifyResultTrack> {
-  const response = await fetch(
-    `${config.spotifyWebApiBaseUrl}/v1/search?q=${query}&type=track&limit=1`,
-    {
-      headers: {
-        Authorization: `Bearer ${props.accessToken}`,
-      },
-    },
-  )
-  const data = await response.json()
-  return { trackName: data.tracks.items[0].name }
-}
-
 async function search() {
   const lines = splitLines(searchInput.value)
-  const results = await Promise.all(lines.map(searchTrack))
+  const results = await Promise.all(lines.map((query) => searchTrack(query, props.accessToken)))
   emit('result', results)
 }
 </script>
