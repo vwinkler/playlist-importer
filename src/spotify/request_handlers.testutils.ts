@@ -370,6 +370,35 @@ export const MOCK_PLAYLIST_RESPONSE = {
   },
 }
 
+export const MOCK_USER_PROFILE_RESPONSE = {
+  country: 'GB',
+  display_name: 'Sherlock Holmes',
+  email: 'sherlock@bakerstreet.com',
+  explicit_content: {
+    filter_enabled: false,
+    filter_locked: false,
+  },
+  external_urls: {
+    spotify: 'https://open.spotify.com/user/someuser',
+  },
+  followers: {
+    href: 'https://api.spotify.com/v1/users/someuser/followers',
+    total: 221,
+  },
+  href: 'https://api.spotify.com/v1/users/someuser',
+  id: MOCK_USER_ID,
+  images: [
+    {
+      url: 'https://i.scdn.co/image/deerstalker.jpg',
+      height: 300,
+      width: 300,
+    },
+  ],
+  product: 'premium',
+  type: 'user',
+  uri: 'spotify:user:someuser',
+}
+
 export const handlers = [
   http.post('https://accounts.spotify.com/api/token', async ({ request }) => {
     const contentType = request.headers.get('Content-Type')
@@ -505,6 +534,15 @@ export const handlers = [
     return HttpResponse.json({
       snapshot_id: 'JbtmHBDBAYu3/bt8BOXKjzKx3i0b6LCa/wVjyl6qQ2Yf6nFXkbmzuEa+ZI/U1yF+',
     })
+  }),
+  http.get('https://api.spotify.com/v1/me', ({ request }) => {
+    const authHeader = request.headers.get('Authorization')
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return HttpResponse.json({ error: 'unauthorized' }, { status: 401 })
+    }
+
+    return HttpResponse.json(MOCK_USER_PROFILE_RESPONSE)
   }),
 ]
 
