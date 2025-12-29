@@ -55,4 +55,32 @@ describe('SpotifySearch', () => {
       expect(screen.getByText(MOCK_TRACK_ITEM_2.name)).toBeInTheDocument()
     })
   })
+
+  it('does not show create playlist button when no tracks are found', () => {
+    const accessToken = 'test-access-token'
+
+    render(SpotifySearch, {
+      props: { accessToken },
+    })
+
+    expect(screen.queryByRole('button', { name: /create playlist/i })).not.toBeInTheDocument()
+  })
+
+  it('shows create playlist button and creates playlist after search', async () => {
+    const accessToken = 'test-access-token'
+
+    render(SpotifySearch, {
+      props: { accessToken },
+    })
+
+    await user.type(screen.getByRole('textbox'), MOCK_TRACK_SEARCH_TERM)
+    await user.click(screen.getByRole('button', { name: /search/i }))
+
+    const createPlaylistButton = await screen.findByRole('button', { name: /create playlist/i })
+    await user.click(createPlaylistButton)
+
+    await waitFor(() => {
+      expect(screen.getByText(/playlist created successfully/i)).toBeInTheDocument()
+    })
+  })
 })

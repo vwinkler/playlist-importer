@@ -2,9 +2,10 @@
 import { ref } from 'vue'
 import SpotifySearchMask from './SpotifySearchMask.vue'
 import SpotifyResultTrackView from './SpotifyResultTrackView.vue'
+import PlaylistCreator from './PlaylistCreator.vue'
 import type { SpotifyResultTrack } from '../model/SpotifyResultTrack'
 
-defineProps<{
+const props = defineProps<{
   accessToken: string
 }>()
 
@@ -19,5 +20,10 @@ function handleSearchResults(results: SpotifyResultTrack[]) {
   <div>
     <SpotifySearchMask :access-token="accessToken" @result="handleSearchResults" />
     <SpotifyResultTrackView v-for="(track, index) in searchResults" :key="index" :result="track" />
+    <PlaylistCreator
+      v-if="searchResults.length > 0"
+      :tracks="searchResults"
+      :access-token="props.accessToken"
+    />
   </div>
 </template>
