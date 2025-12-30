@@ -9,6 +9,8 @@ const props = defineProps<{
   accessToken: string
 }>()
 
+const playlistName = ref('')
+const playlistDescription = ref('')
 const success = ref(false)
 
 async function handleCreatePlaylist() {
@@ -17,8 +19,8 @@ async function handleCreatePlaylist() {
   const result = await createPlaylist(
     userId,
     {
-      name: 'New Playlist',
-      description: 'Created with Playlist Importer',
+      name: playlistName.value,
+      description: playlistDescription.value,
     },
     props.accessToken,
   )
@@ -31,6 +33,14 @@ async function handleCreatePlaylist() {
 
 <template>
   <div>
+    <div>
+      <label for="playlist-name">Playlist Name</label>
+      <input id="playlist-name" v-model="playlistName" type="text" />
+    </div>
+    <div>
+      <label for="playlist-description">Description</label>
+      <input id="playlist-description" v-model="playlistDescription" type="text" />
+    </div>
     <button @click="handleCreatePlaylist">Create Playlist</button>
     <p v-if="success">Playlist created successfully</p>
   </div>

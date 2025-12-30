@@ -497,12 +497,8 @@ export const handlers = [
       throw new Error('Playlist name is required')
     }
 
-    if (
-      !body.description ||
-      typeof body.description !== 'string' ||
-      body.description.trim() === ''
-    ) {
-      throw new Error('Playlist description is required')
+    if (body.description !== undefined && typeof body.description !== 'string') {
+      throw new Error('Playlist description must be a string if provided')
     }
 
     return HttpResponse.json(MOCK_PLAYLIST_RESPONSE)

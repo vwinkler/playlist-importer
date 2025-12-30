@@ -3,7 +3,7 @@ import type { SpotifyResultTrack } from '../model/SpotifyResultTrack'
 
 export interface PlaylistCreationData {
   name: string
-  description: string
+  description?: string
 }
 
 export interface PlaylistCreationResult {
